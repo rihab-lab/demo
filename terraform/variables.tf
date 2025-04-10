@@ -17,7 +17,7 @@ variable "snowflake_password" {
 variable "snowflake_region" {
   description = "Région Snowflake"
   type        = string
-  default     = "us-west-2"
+  default     = "us-west-2" # à adapter si besoin
 }
 
 variable "database_name" {
