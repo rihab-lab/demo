@@ -16,7 +16,7 @@ terraform {
     organization = "rbaorga"
     workspaces {
      
-      prefix = "snowflake_project_workspace" #To use multiple remote workspaces
+      prefix = "demo" #To use multiple remote workspaces
     }
   }
 }
