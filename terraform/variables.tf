@@ -14,11 +14,6 @@ variable "snowflake_password" {
   sensitive   = true
 }
 
-variable "snowflake_region" {
-  description = "Région Snowflake"
-  type        = string
-  default     = "us-west-2" # à adapter si besoin
-}
 
 variable "database_name" {
   description = "Nom de la base de données"
