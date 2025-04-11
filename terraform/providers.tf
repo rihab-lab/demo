@@ -1,8 +1,8 @@
 provider "snowflake" {
-  account                  = var.snowflake_account
-  username                 = var.snowflake_username
-  password                 = var.snowflake_password
-  role                     = "SYSADMIN"
-  region                   = var.snowflake_region
+  account  = var.snowflake_account     # exemple : "GL28585.gcp_europe_west4"
+  username = var.snowflake_username    # ex : "RIHABBAHRI"
+  password = var.snowflake_password    # sensible
+  role     = "SYSADMIN"
+
   preview_features_enabled = ["snowflake_table_resource"]
 }
