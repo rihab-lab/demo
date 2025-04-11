@@ -1,5 +1,5 @@
 resource "snowflake_database" "demo_db" {
-  name    = "TEST_POC_VISEO_DB"
+  name    = "DEV_POC_VISEO_DB"
   comment = "Database for Snowflake Terraform demo"
 }
 
@@ -18,7 +18,8 @@ resource "snowflake_schema" "raw_layer" {
   database            = snowflake_database.demo_db.name  // La base de données à laquelle se rattache le schéma
   name                = "RAW_LAYER"
   with_managed_access = false
-   depends_on = [
+  
+  depends_on = [
     snowflake_database.demo_db,
     snowflake_grant_privileges_to_account_role.database_grant
   ]
