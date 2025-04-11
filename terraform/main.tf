@@ -1,13 +1,12 @@
 terraform {
-
   required_providers {
-    snowflake = {                         
-      source = "Snowflake-Labs/snowflake" 
+    snowflake = {
+      source  = "Snowflake-Labs/snowflake"
       version = "1.0.4"
     }
   }
 
-    backend "remote" {
+  backend "remote" {
     organization = "rbaorga"
     workspaces {
       name = "demo"
