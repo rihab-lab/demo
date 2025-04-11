@@ -3,6 +3,15 @@ resource "snowflake_database" "demo_db" {
   comment = "Database for Snowflake Terraform demo"
 }
 
+resource "snowflake_grant_privileges_to_account_role" "database_grant" {
+  provider          = snowflake.security_admin
+  privileges        = ["USAGE", "MONITOR", "MODIFY", "CREATE SCHEMA"]
+  account_role_name = snowflake_account_role.role.name
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = snowflake_database.demo_db.name
+  }
+}
 
 resource "snowflake_schema" "raw_layer" {
   provider            = snowflake.sys_admin       // Utilise le provider aliasé "sys_admin"
@@ -68,3 +77,4 @@ resource "snowflake_grant_privileges_to_account_role" "schema_grant_bronze" {
     schema_name = "\"${snowflake_database.demo_db.name}\".\"${snowflake_schema.bronze_layer.name}\""
   }
 }
+
