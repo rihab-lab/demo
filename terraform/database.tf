@@ -18,7 +18,12 @@ resource "snowflake_schema" "raw_layer" {
   database            = snowflake_database.demo_db.name  // La base de données à laquelle se rattache le schéma
   name                = "RAW_LAYER"
   with_managed_access = false
+   depends_on = [
+    snowflake_database.demo_db,
+    snowflake_grant_privileges_to_account_role.database_grant
+  ]
 }
+
 
 resource "snowflake_grant_privileges_to_account_role" "schema_grant_raw" {
   provider          = snowflake.security_admin    // Utilise le provider aliasé "security_admin"
