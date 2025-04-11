@@ -3,6 +3,7 @@ resource "snowflake_database" "demo_db" {
   comment = "Database for Snowflake Terraform demo"
 }
 
+
 resource "snowflake_schema" "raw_layer" {
   provider            = snowflake.sys_admin       // Utilise le provider aliasé "sys_admin"
   database            = snowflake_database.demo_db.name  // La base de données à laquelle se rattache le schéma
