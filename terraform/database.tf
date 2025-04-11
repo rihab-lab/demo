@@ -1,8 +1,29 @@
 resource "snowflake_database" "db" {
-  name    = "Database_POC_VISEO_DB"
-  comment = "Database for Snowflake Terraform demo"
+  provider = snowflake.sys_admin
+  name     = "Database_POC_VISEO_DB"
+  comment  = "Database for Snowflake Terraform demo"
 }
 
+# 1) Donne à SYSADMIN les privilèges nécessaires pour créer un schéma dans la base
+resource "snowflake_grant_privileges_to_role" "db_usage_for_sysadmin" {
+  provider    = snowflake.security_admin
+  object_type = "DATABASE"
+  object_name = snowflake_database.db.name
+  roles       = ["SYSADMIN"]
+
+  privilege = "USAGE"
+}
+
+resource "snowflake_grant_privileges_to_role" "db_create_schema_for_sysadmin" {
+  provider    = snowflake.security_admin
+  object_type = "DATABASE"
+  object_name = snowflake_database.db.name
+  roles       = ["SYSADMIN"]
+
+  privilege = "CREATE SCHEMA"
+}
+
+# 2) Donne au rôle TEST_POC_VISEO_ROLE des privilèges (USAGE, MONITOR, CREATE SCHEMA) sur la base
 resource "snowflake_grant_privileges_to_account_role" "database_grant" {
   provider          = snowflake.security_admin
   privileges        = ["USAGE", "MONITOR", "MODIFY", "CREATE SCHEMA"]
@@ -14,20 +35,24 @@ resource "snowflake_grant_privileges_to_account_role" "database_grant" {
   }
 }
 
+# 3) Crée le schéma "RAW_LAYER" via SYSADMIN (qui a désormais USAGE + CREATE SCHEMA)
 resource "snowflake_schema" "raw_layer" {
-  provider            = snowflake.sys_admin       // Utilisation du provider sys_admin pour la création du schéma
-  database            = snowflake_database.db.name  // Référence à la base créée ci-dessus
+  provider            = snowflake.sys_admin
+  database            = snowflake_database.db.name
   name                = "RAW_LAYER"
   with_managed_access = false
 
   depends_on = [
     snowflake_database.db,
+    snowflake_grant_privileges_to_role.db_usage_for_sysadmin,
+    snowflake_grant_privileges_to_role.db_create_schema_for_sysadmin,
     snowflake_grant_privileges_to_account_role.database_grant
   ]
 }
 
+# 4) Donne au rôle TEST_POC_VISEO_ROLE les privilèges nécessaires pour exploiter le schéma RAW_LAYER
 resource "snowflake_grant_privileges_to_account_role" "schema_grant_raw" {
-  provider          = snowflake.security_admin    // Provider pour attribuer les grants sur le schéma
+  provider          = snowflake.security_admin
   privileges        = [
     "USAGE",
     "CREATE EXTERNAL TABLE",
@@ -44,7 +69,6 @@ resource "snowflake_grant_privileges_to_account_role" "schema_grant_raw" {
   account_role_name = snowflake_account_role.role.name
 
   on_schema {
-    // Construction du nom complet du schéma sous la forme Database.Schema
     schema_name = "${snowflake_database.db.name}.${snowflake_schema.raw_layer.name}"
   }
 }
