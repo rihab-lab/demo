@@ -1,6 +1,6 @@
 resource "snowflake_database" "db" {
   provider = snowflake.sys_admin
-  name     = "Database_POC_VISEO_DB"
+  name     = "TEST_POC_VISEO_DB"
   comment  = "Main dev database"
 }
 
