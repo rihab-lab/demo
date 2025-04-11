@@ -9,7 +9,7 @@ terraform {
   backend "remote" {
     organization = "rbaorga"
     workspaces {
-      prefix = "demo"
+      name = "demo"
     }
   }
 }
