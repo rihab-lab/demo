@@ -1,0 +1,6 @@
+[TEST]
+account = "KDUZTAC-QE77136"
+user = "RIHABBAHRI"
+database = "TEST_POC_VISEO_DB"
+role = "TEST_POC_VISEO_ROLE"
+warehouse = "TEST_WH"
