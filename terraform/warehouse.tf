@@ -1,7 +1,7 @@
 resource "snowflake_warehouse" "warehouse" {
   provider       = snowflake.sys_admin
   name           = "TEST_WH"
-  warehouse_size = var.warehouse_size
+  warehouse_size = "small"
   auto_suspend   = 60
 }
 
