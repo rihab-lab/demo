@@ -61,3 +61,26 @@ resource "snowflake_table" "change_history_table" {
   }
 
 }
+
+resource "snowflake_table" "raw_metadata" {
+  provider = snowflake.sys_admin
+  name     = "RAW_METADATA"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.raw_layer.name
+  comment  = "Table pour ingérer uniquement les métadonnées des fichiers Azure"
+
+  column {
+    name = "FILE_NAME"
+    type = "VARCHAR"
+  }
+
+  column {
+    name = "LOAD_DATE"
+    type = "DATE"
+  }
+
+  column {
+    name    = "LOAD_TIME"
+    type    = "TIMESTAMP_NTZ"
+  }
+}
