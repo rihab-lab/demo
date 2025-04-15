@@ -11,8 +11,8 @@ resource "snowflake_file_format" "CSV_file_format" {
 }
 resource "snowflake_stage" "azure_external_stage" {
   name     = "EXTERNAL_AZUR_STAGE"
-  database = snowflake.sys_admin
-  schema   = snowflake_database.db.name
+  database = nowflake_database.db.name
+  schema   =  "RAW_LAYER"
   url      = "azure://storageacctpoc.blob.core.windows.net/landing-zone"
 
   credentials = jsonencode({
