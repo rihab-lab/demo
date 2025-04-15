@@ -22,6 +22,7 @@ resource "snowflake_file_format" "csv_format" {
 }
 
 resource "snowflake_stage" "azure_stage" {
+  provider            = snowflake.account_admin
   name                = "EXTERNAL_AZURE_STAGE"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
