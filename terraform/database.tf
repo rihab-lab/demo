@@ -117,4 +117,13 @@ resource "snowflake_grant_privileges_to_account_role" "executetask" {
   on_account        = true
 
 }
+
+resource "snowflake_object_grant" "file_format_usage" {
+  object_type = "FILE FORMAT"
+  object_name = "CSV_FILE_FORMAT"  # or reference the TF resource name
+  database    = "TEST_POC_VISEO_DB"
+  schema      = "RAW_LAYER"
+  privilege   = "USAGE"
+  roles       = [snowflake_account_role.role.name]
+}
  
