@@ -1,15 +1,14 @@
-
 resource "snowflake_file_format" "CSV_file_format" {
   provider  = snowflake.sys_admin
   name      = "CSV_FORMAT"
-  database = snowflake_database.db.name
-  schema   = snowflake_schema.raw_layer.name          # optional if you want it in a specific schema
-  format_type     = "CSV"
+  database  = snowflake_database.db.name
+  schema    = snowflake_schema.raw_layer.name
+  format_type = "CSV"
 
-  // CSV-specific options
-  skip_header                 = 1
+  skip_header                   = 1
   field_optionally_enclosed_by = "\""
 }
+
 resource "null_resource" "create_stage_sql" {
   provisioner "local-exec" {
     command = <<EOT
@@ -21,10 +20,11 @@ snowsql -a $SNOWFLAKE_ACCOUNT \
         -s RAW_LAYER \
         -q "CREATE OR REPLACE STAGE RAW_LAYER.EXTERNAL_AZUR_STAGE
             URL = 'azure://storageacctpoc.blob.core.windows.net/landing-zone'
-            CREDENTIALS = (AZURE_SAS_TOKEN='$TF_VAR_sas_token')
+            CREDENTIALS = (AZURE_SAS_TOKEN='$SAS_TOKEN')
             FILE_FORMAT = CSV_FORMAT;"
 EOT
+    environment = {
+      SAS_TOKEN = var.sas_token
+    }
   }
 }
-
-
