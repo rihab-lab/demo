@@ -1,5 +1,5 @@
 resource "snowflake_storage_integration" "azure_int" {
-  provider              = snowflake.sys_admin
+  provider              = snowflake.account_admin
   name                   = "AZURE_STORAGE_INT"
   type                   = "EXTERNAL_STAGE"
   storage_provider       = "AZURE"
@@ -11,7 +11,7 @@ resource "snowflake_storage_integration" "azure_int" {
 }
 
 resource "snowflake_file_format" "csv_format" {
-  provider              = snowflake.sys_admin
+  provider              = snowflake.account_admin
   name        = "CSV_FORMAT"
   database    = "TEST_POC_VISEO_DB"
   schema      = "RAW_LAYER"
