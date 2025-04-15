@@ -1,6 +1,7 @@
 
 resource "snowflake_file_format" "CSV_file_format" {
-  name            = "CSV_file_FORMAT"
+  provider  = snowflake.sys_admin
+  name      = "CSV_FORMAT"
   database = snowflake_database.db.name
   schema   = snowflake_schema.raw_layer.name          # optional if you want it in a specific schema
   format_type     = "CSV"
@@ -10,6 +11,7 @@ resource "snowflake_file_format" "CSV_file_format" {
   field_optionally_enclosed_by = "\""
 }
 resource "snowflake_stage" "azure_external_stage" {
+  provider  = snowflake.sys_admin
   name     = "EXTERNAL_AZUR_STAGE"
   database = snowflake_database.db.name
   schema   =  "RAW_LAYER"
