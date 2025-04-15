@@ -10,15 +10,21 @@ resource "snowflake_file_format" "CSV_file_format" {
   skip_header                 = 1
   field_optionally_enclosed_by = "\""
 }
-resource "snowflake_sql" "create_azure_stage" {
-  provider = snowflake.sys_admin
-
-  database = snowflake_database.db.name
-  warehouse = "YOUR_WAREHOUSE" # optionnel mais utile
-  statement = <<EOT
-    CREATE OR REPLACE STAGE RAW_LAYER.EXTERNAL_AZUR_STAGE
-    URL = 'azure://storageacctpoc.blob.core.windows.net/landing-zone'
-    CREDENTIALS = (AZURE_SAS_TOKEN='${var.sas_token}')
-    FILE_FORMAT = CSV_FORMAT;
-  EOT
+resource "null_resource" "create_stage_sql" {
+  provisioner "local-exec" {
+    command = <<EOT
+snowsql -a $SNOWFLAKE_ACCOUNT \
+        -u $SNOWFLAKE_USER \
+        -p $SNOWFLAKE_PASSWORD \
+        -r SYSADMIN \
+        -d TEST_POC_VISEO_DB \
+        -s RAW_LAYER \
+        -q "CREATE OR REPLACE STAGE RAW_LAYER.EXTERNAL_AZUR_STAGE
+            URL = 'azure://storageacctpoc.blob.core.windows.net/landing-zone'
+            CREDENTIALS = (AZURE_SAS_TOKEN='$TF_VAR_sas_token')
+            FILE_FORMAT = CSV_FORMAT;"
+EOT
+  }
 }
+
+
