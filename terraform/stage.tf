@@ -1,30 +1,29 @@
-resource "snowflake_file_format" "CSV_file_format" {
-  provider  = snowflake.sys_admin
-  name      = "CSV_FORMAT"
-  database  = snowflake_database.db.name
-  schema    = snowflake_schema.raw_layer.name
+resource "snowflake_storage_integration" "azure_int" {
+  name                   = "AZURE_STORAGE_INT"
+  type                   = "EXTERNAL_STAGE"
+  storage_provider       = "AZURE"
+  azure_tenant_id        = var.azure_tenant_id
+  storage_allowed_locations = [
+    var.azure_container_url
+  ]
+  enabled = true
+}
+
+resource "snowflake_file_format" "csv_format" {
+  name        = "CSV_FORMAT"
+  database    = "TEST_POC_VISEO_DB"
+  schema      = "RAW_LAYER"
   format_type = "CSV"
 
   skip_header                   = 1
   field_optionally_enclosed_by = "\""
 }
 
-resource "null_resource" "create_stage_sql" {
-  provisioner "local-exec" {
-    command = <<EOT
-snowsql -a $SNOWFLAKE_ACCOUNT \
-        -u $SNOWFLAKE_USER \
-        -p $SNOWFLAKE_PASSWORD \
-        -r SYSADMIN \
-        -d TEST_POC_VISEO_DB \
-        -s RAW_LAYER \
-        -q "CREATE OR REPLACE STAGE RAW_LAYER.EXTERNAL_AZUR_STAGE
-            URL = 'azure://storageacctpoc.blob.core.windows.net/landing-zone'
-            CREDENTIALS = (AZURE_SAS_TOKEN='$SAS_TOKEN')
-            FILE_FORMAT = CSV_FORMAT;"
-EOT
-    environment = {
-      SAS_TOKEN = var.sas_token
-    }
-  }
+resource "snowflake_stage" "azure_stage" {
+  name                = "EXTERNAL_AZURE_STAGE"
+  database            = "TEST_POC_VISEO_DB"
+  schema              = "RAW_LAYER"
+  url                 = var.azure_container_url
+  storage_integration = snowflake_storage_integration.azure_int.name
+  file_format         = snowflake_file_format.csv_format.name
 }
