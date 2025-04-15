@@ -22,7 +22,7 @@ resource "snowflake_stage" "azure_stage" {
   schema   = snowflake_schema.raw_layer.name
 
   # Fully qualified SAS URL
-  url = "azure://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=xxx"
+  url = "azure://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=qdHfIGNdWuBYDiGMR3vguyoNGy5uJb4s5c0I6EUP1Go%3D"
 
   # Best practice: reference the resource instead of a plain string
   file_format = "${snowflake_file_format.format.name}"
