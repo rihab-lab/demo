@@ -1,5 +1,5 @@
 resource "snowflake_file_format" "CSV_file_format" {
-  name            = "CSV_FORMAT"
+  name            = "CSV_file_FORMAT"
   database = snowflake_database.db.name
   schema   = snowflake_schema.raw_layer.name          # optional if you want it in a specific schema
   format_type     = "CSV"
