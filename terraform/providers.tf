@@ -8,7 +8,9 @@ provider "snowflake" {
 provider "snowflake" {
   alias                    = "sys_admin"
   role                     = "SYSADMIN"
-  preview_features_enabled = ["snowflake_table_resource"] 
+  preview_features_enabled = ["snowflake_table_resource","snowflake_pipe_resource",
+    "snowflake_file_format_resource",
+    "snowflake_stage_resource"] 
 }
 provider "snowflake" {
   alias                    = "account_admin"

@@ -15,9 +15,9 @@ resource "snowflake_pipe" "metadata_pipe" {
           REGEXP_SUBSTR(METADATA\$FILENAME, '([0-9]{8})(?=\\.csv)'),
           'YYYYMMDD'
         ) AS LOAD_DATE
-      FROM @EXTERNAL_AZUR_STAGE
+      FROM @EXTERNAL_AZURE_STAGE
     )
-    FILE_FORMAT = (TYPE = CSV SKIP_HEADER = 1)
+    FILE_FORMAT = "TEST_POC_VISEO_DB"."RAW_LAYER"."CSV_FORMAT"
     PATTERN = '.*\\.csv'
     ON_ERROR = 'CONTINUE'
   EOT
