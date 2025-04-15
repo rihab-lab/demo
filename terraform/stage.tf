@@ -28,7 +28,5 @@ resource "snowflake_stage" "azure_stage" {
   schema              = "RAW_LAYER"
   url                 = var.azure_container_url
   storage_integration = snowflake_storage_integration.azure_int.name
- file_format = {
-  format_name = "TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
-}
+  file_format         = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
 }
