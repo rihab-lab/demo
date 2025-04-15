@@ -1,9 +1,5 @@
-################################
-# Pipe
-################################
 resource "snowflake_pipe" "metadata_pipe" {
   provider = snowflake.sys_admin
-
   name      = "MY_METADATA_PIPE"
   database  = snowflake_database.db.name
   schema    = snowflake_schema.raw_layer.name

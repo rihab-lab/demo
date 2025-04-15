@@ -25,4 +25,6 @@ resource "snowflake_stage" "azure_stage" {
 
   # Référence le file format défini plus haut
   file_format = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
+
+ 
 }
