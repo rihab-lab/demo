@@ -1,5 +1,5 @@
-resource "snowflake_file_format" "csv_file_format" {
-  name            = "MY_CSV_FORMAT"
+resource "snowflake_file_format" "format" {
+  name            = "CSV_FORMAT"
   database        = "TEST_POC_VISEO_DB"    # optional if you want it in a specific DB
   schema          = "RAW_LAYER"            # optional if you want it in a specific schema
   format_type     = "CSV"
@@ -20,5 +20,5 @@ resource "snowflake_stage" "azure_stage" {
   # DO NOT include "https://" after "azure://"
   url = "azure://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=qdHfIGNdWuBYDiGMR3vguyoNGy5uJb4s5c0I6EUP1Go%3D"
   
-  file_format = snowflake_file_format.csv_file_format.name
+  file_format = snowflake_file_format.format.name
 } 
