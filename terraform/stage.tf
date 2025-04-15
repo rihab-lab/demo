@@ -11,13 +11,15 @@ resource "snowflake_file_format" "csv_file_format" {
 }
 
 # 2. Reference this file format in your stage
+# Define the stage resource and include the SAS token inline in the URL
 resource "snowflake_stage" "azure_stage" {
-  name       = "EXTERNAL_AZURE_STAGE"
-  database   = "TEST_POC_VISEO_DB"
-  schema     = "RAW_LAYER"
+  name     = "EXTERNAL_AZURE_STAGE"
+  database = "TEST_POC_VISEO_DB"
+  schema   = "RAW_LAYER"
 
-  // We just pass the file format's name attribute
-  file_format        = snowflake_file_format.csv_file_format.name
-  storage_integration = "MY_AZURE_INTEGRATION"
-  url                = "azure://https://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=qdHfIGNdWuBYDiGMR3vguyoNGy5uJb4s5c0I6EUP1Go%3D"
+  # Correct URL: Note the prefix is "azure://", followed directly by your account details.
+  # DO NOT include "https://" after "azure://"
+  url = "azure://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=qdHfIGNdWuBYDiGMR3vguyoNGy5uJb4s5c0I6EUP1Go%3D"
+  
+  file_format = snowflake_file_format.csv_file_format.name
 }
