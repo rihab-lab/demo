@@ -24,5 +24,5 @@ resource "snowflake_stage" "azure_stage" {
   url        = "azure://storageacctpoc.blob.core.windows.net/landing-zone?sp=r&st=2025-04-15T07:55:24Z&se=2026-06-01T15:55:24Z&spr=https&sv=2024-11-04&sr=c&sig=xxx"
 
   # Référence le file format défini plus haut
-  file_format = snowflake_file_format.format.name
+  file_format = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
 }
