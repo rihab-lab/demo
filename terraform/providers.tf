@@ -15,3 +15,8 @@ provider "snowflake" {
   role                     = "ACCOUNTADMIN"
   preview_features_enabled = ["snowflake_table_resource"] # mandatory to use preview resource "table creation"
 }
+
+provider "snowflake" {
+  # Enable the preview feature for the snowflake_file_format resource:
+  preview_features_enabled = ["snowflake_file_format_resource"]
+}
