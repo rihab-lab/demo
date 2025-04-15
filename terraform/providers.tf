@@ -18,5 +18,9 @@ provider "snowflake" {
 
 provider "snowflake" {
   # Enable the preview feature for the snowflake_file_format resource:
-  preview_features_enabled = ["snowflake_file_format_resource"]
+  preview_features_enabled = [
+    "snowflake_file_format_resource",
+    "snowflake_stage_resource"
+  ]
 }
+
