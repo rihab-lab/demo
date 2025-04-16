@@ -87,7 +87,7 @@ resource "snowflake_table" "prc_benchmark_raw" {
   }
   column {
     name = "SYS_SOURCE_DATE"
-    type = "DATE"
+    type = "VARCHAR"
   }
   column {
   name = "FILE_NAME"
@@ -132,8 +132,8 @@ resource "snowflake_table" "prc_campaign_raw" {
     type = "DATE"
   }
   column {
-    name = "SYS_SOURCE_DATE_2"
-    type = "DATE"
+    name = "SYS_SOURCE_DATE"
+    type = "VARCHAR"
   }
   column {
   name = "FILE_NAME"
