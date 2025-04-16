@@ -124,7 +124,7 @@ resource "snowflake_table" "prc_campaign_raw" {
     type = "VARCHAR"
   }
   column {
-    name = "SYS_SOURCE_DATE"
+    name = "SYS_SOURCE_DATE2"
     type = "DATE"
   }
   column {
