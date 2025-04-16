@@ -89,6 +89,16 @@ resource "snowflake_table" "prc_benchmark_raw" {
     name = "SYS_SOURCE_DATE"
     type = "DATE"
   }
+  column {
+  name = "FILE_NAME"
+  type = "STRING"
+}
+
+  column {
+  name = "LOAD_TIME"
+  type = "TIMESTAMP_NTZ"
+}
+
 }
 
 resource "snowflake_table" "prc_campaign_raw" {
@@ -125,4 +135,14 @@ resource "snowflake_table" "prc_campaign_raw" {
     name = "SYS_SOURCE_DATE_2"
     type = "DATE"
   }
+  column {
+  name = "FILE_NAME"
+  type = "STRING"
+}
+
+  column {
+  name = "LOAD_TIME"
+  type = "TIMESTAMP_NTZ"
+}
+
 }
