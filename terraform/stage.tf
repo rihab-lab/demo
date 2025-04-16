@@ -10,14 +10,13 @@ resource "snowflake_storage_integration" "azure_int" {
   enabled = true
 }
 
-resource "snowflake_integration_grant" "grant_storage_usage" {
-  integration_name  = snowflake_storage_integration.azure_int.name
-  provider          = snowflake.sys_admin
-  roles             = ["SYSADMIN"]  # ou autre rôle actif
-  privilege         = "USAGE"
-  with_grant_option = false
+resource "snowflake_grant_privileges_to_role" "grant_usage_on_integration" {
+  provider     = snowflake.account_admin
+  privileges   = ["USAGE"]
+  object_type  = "INTEGRATION"
+  object_name  = snowflake_storage_integration.azure_int.name
+  roles        = ["SYSADMIN"]
 }
-
 resource "snowflake_file_format" "csv_format" {
   provider              = snowflake.account_admin
   name        = "CSV_FORMAT"
