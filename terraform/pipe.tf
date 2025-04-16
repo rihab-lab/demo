@@ -1,5 +1,5 @@
 resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
-  name     = "PIPE_RAW_PRC_BENCHMARK_TEST"
+  name     = "PIPE_RAW_PRC_BENCHMARK"
   provider = snowflake.account_admin
   database = "TEST_POC_VISEO_DB"
   schema   = "RAW_LAYER"
@@ -10,9 +10,9 @@ resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
   "Anabench2Code",
   "Anabench2",
   "SKUGroup",
-  SYS_SOURCE_DATE,
-  FILE_NAME,
-  LOAD_TIME
+   SYS_SOURCE_DATE,
+   FILE_NAME,
+   LOAD_TIME
 )
 FROM (
   SELECT
