@@ -30,3 +30,4 @@ resource "snowflake_stage" "azure_stage" {
   storage_integration = "AZURE_STORAGE_INT"
   file_format = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
 
+}
