@@ -10,13 +10,6 @@ resource "snowflake_storage_integration" "azure_int" {
   enabled = true
 }
 
-resource "snowflake_grant_privileges_to_role" "grant_usage_on_integration" {
-  provider     = snowflake.account_admin
-  privileges   = ["USAGE"]
-  object_type  = "INTEGRATION"
-  object_name  = snowflake_storage_integration.azure_int.name
-  roles        = ["SYSADMIN"]
-}
 resource "snowflake_file_format" "csv_format" {
   provider              = snowflake.account_admin
   name        = "CSV_FORMAT"
@@ -33,7 +26,7 @@ resource "snowflake_stage" "azure_stage" {
   name                = "EXTERNAL_AZURE_STAGE"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
-  url                 = "azure://storageacctpoc.blob.core.windows.net/landing-zone"
+  url                 =  var.azure_container_url
   storage_integration = "AZURE_STORAGE_INT"
 
   file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
