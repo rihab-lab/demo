@@ -5,7 +5,7 @@ resource "snowflake_storage_integration" "azure_int" {
   storage_provider       = "AZURE"
   azure_tenant_id        = var.azure_tenant_id
   storage_allowed_locations = [
-    "azure://storageacctpoc.blob.core.windows.net/landing-zone"
+    var.azure_container_url
   ]
   enabled = true
 }
@@ -28,6 +28,5 @@ resource "snowflake_stage" "azure_stage" {
   schema              = "RAW_LAYER"
   url                 = "azure://storageacctpoc.blob.core.windows.net/landing-zone"
   storage_integration = "AZURE_STORAGE_INT"
+  file_format = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
 
-  file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
-}
