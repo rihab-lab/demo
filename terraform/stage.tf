@@ -5,7 +5,7 @@ resource "snowflake_storage_integration" "azure_int" {
   storage_provider       = "AZURE"
   azure_tenant_id        = var.azure_tenant_id
   storage_allowed_locations = [
-    var.azure_container_url
+    "azure://storageacctpoc.blob.core.windows.net/landing-zone"
   ]
   enabled = true
 }
