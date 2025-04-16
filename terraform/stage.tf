@@ -8,7 +8,7 @@
     var.azure_container_url
   ]
   enabled = true
-}
+}*/
 
 resource "snowflake_file_format" "csv_format" {
   provider              = snowflake.account_admin
@@ -21,7 +21,7 @@ resource "snowflake_file_format" "csv_format" {
   field_optionally_enclosed_by = "\""
 }
 
-resource "snowflake_stage" "azure_stage" {
+/*resource "snowflake_stage" "azure_stage" {
   provider            = snowflake.account_admin
   name                = "EXTERNAL_AZURE_STAGE"
   database            = "TEST_POC_VISEO_DB"
