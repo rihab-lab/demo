@@ -26,7 +26,8 @@ resource "snowflake_stage" "azure_stage" {
   name                = "EXTERNAL_AZURE_STAGE"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
-  url                 = var.azure_container_url
-  storage_integration = snowflake_storage_integration.azure_int.name
-  file_format         = "\"TEST_POC_VISEO_DB\".\"RAW_LAYER\".\"CSV_FORMAT\""
+  url                 = "azure://storageacctpoc.blob.core.windows.net/landing-zone"
+  storage_integration = "AZURE_STORAGE_INT"
+
+  file_format = snowflake_file_format.csv_format.name
 }
