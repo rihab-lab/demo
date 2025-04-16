@@ -9,16 +9,17 @@
   ]
   enabled = true
 }*/
-
 resource "snowflake_file_format" "csv_format" {
-  provider              = snowflake.account_admin
-  name        = "CSV_FORMAT"
-  database    = "TEST_POC_VISEO_DB"
-  schema      = "RAW_LAYER"
+  provider   = snowflake.account_admin
+  name       = "CSV_FORMAT"
+  database   = "TEST_POC_VISEO_DB"
+  schema     = "RAW_LAYER"
   format_type = "CSV"
 
-  skip_header                   = 1
-  field_optionally_enclosed_by = "\""
+  skip_header         = 1
+  field_delimiter     = ";"      # ✅ Ton fichier est délimité par des points-virgules
+  null_if             = ["NULL", "null"]
+  empty_field_as_null = true
 }
 
 /*resource "snowflake_stage" "azure_stage" {
