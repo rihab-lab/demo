@@ -62,25 +62,67 @@ resource "snowflake_table" "change_history_table" {
 
 }
 
-resource "snowflake_table" "raw_metadata" {
+
+resource "snowflake_table" "prc_benchmark_raw" {
   provider = snowflake.sys_admin
-  name     = "RAW_METADATA"
+  name     = "RAW_PRC_BENCHMARK"
   database = snowflake_database.db.name
   schema   = snowflake_schema.raw_layer.name
-  comment  = "Table pour ingérer uniquement les métadonnées des fichiers Azure"
 
   column {
-    name = "FILE_NAME"
+    name = "APUKCode"
     type = "VARCHAR"
   }
-
   column {
-    name = "LOAD_DATE"
+    name = "Anabench2Code"
+    type = "VARCHAR"
+  }
+  column {
+    name = "Anabench2"
+    type = "VARCHAR"
+  }
+  column {
+    name = "SKUGroup"
+    type = "VARCHAR"
+  }
+  column {
+    name = "SYS_SOURCE_DATE"
     type = "DATE"
   }
+}
+
+resource "snowflake_table" "prc_campaign_raw" {
+  provider = snowflake.sys_admin
+  name     = "RAW_PRC_CAMPAIGN"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.raw_layer.name
 
   column {
-    name    = "LOAD_TIME"
-    type    = "TIMESTAMP_NTZ"
+    name = "APUKCode"
+    type = "VARCHAR"
+  }
+  column {
+    name = "Anabench2Code"
+    type = "VARCHAR"
+  }
+  column {
+    name = "Anabench2"
+    type = "VARCHAR"
+  }
+  column {
+    name = "SKUGroup"
+    type = "VARCHAR"
+  }
+  column {
+    name = "SYS_SOURCE_DATE"
+    type = "DATE"
+  }
+  column {
+    name = "CampaignDate"
+    type = "DATE"
+  }
+  column {
+    name = "SYS_SOURCE_DATE_2"
+    type = "DATE"
   }
 }
