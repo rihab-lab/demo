@@ -1,4 +1,4 @@
-resource "snowflake_storage_integration" "azure_int" {
+/*resource "snowflake_storage_integration" "azure_int" {
   provider              = snowflake.account_admin
   name                   = "AZURE_STORAGE_INT"
   type                   = "EXTERNAL_STAGE"
@@ -31,3 +31,4 @@ resource "snowflake_stage" "azure_stage" {
 
   file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
 }
+*/
