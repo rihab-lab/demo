@@ -1,0 +1,18 @@
+config-version: 1
+
+root-folder: '.'
+modules-folder: null
+
+# Connexion Snowflake
+connections-file-path: './connection.toml'
+connection-name: 'TEST'
+
+# Une seule table d'historique centralisée dans RAW_LAYER
+change-history-table: 'TEST_POC_VISEO_DB.MONITORING_LAYER.SCHEMA_CHANGE_HISTORY'
+create-change-history-table: true
+
+# Options d'exécution
+autocommit: false
+verbose: true
+dry-run: false
+query-tag: 'SCHEMACHANGE_ALL'

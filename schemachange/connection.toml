@@ -1,6 +1,8 @@
 [TEST]
 account = "KDUZTAC-QE77136"
 user = "RIHABBAHRI"
+password = "xxx"
 database = "TEST_POC_VISEO_DB"
-role = "TEST_POC_VISEO_ROLE"
+schema = "RAW_LAYER"
 warehouse = "TEST_WH"
+role = "ACCOUNTADMIN"
