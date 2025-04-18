@@ -3,6 +3,7 @@ resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
   provider = snowflake.account_admin
   database = "TEST_POC_VISEO_DB"
   schema   = "RAW_LAYER"
+  auto_ingest  = false
 
   copy_statement = <<-SQL
   COPY INTO TEST_POC_VISEO_DB.RAW_LAYER.PRC_BENCHMARK_RAW (
@@ -41,6 +42,7 @@ resource "snowflake_pipe" "pipe_raw_prc_campaign" {
   provider = snowflake.account_admin
   database = "TEST_POC_VISEO_DB"
   schema   = "RAW_LAYER"
+  auto_ingest  = false
 
   copy_statement = <<-SQL
   COPY INTO TEST_POC_VISEO_DB.RAW_LAYER.PRC_CAMPAIGN_RAW(
