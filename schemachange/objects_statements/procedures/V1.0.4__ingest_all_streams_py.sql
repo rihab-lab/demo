@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE bronze_layer.ingest_all_streams_python()
+CREATE OR REPLACE PROCEDURE bronze_layer.ingest_all_streams_py()
   RETURNS STRING
   LANGUAGE PYTHON
   RUNTIME_VERSION = '3.8'
