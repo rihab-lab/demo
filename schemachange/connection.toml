@@ -1,5 +1,5 @@
 [TEST]
-account     = "KDUZTAC-QE77136"
+account     = "kduztac-qe77136"
 user        = "$SF_USER"
 password    = "$SF_PWD"
 database = "TEST_POC_VISEO_DB"
