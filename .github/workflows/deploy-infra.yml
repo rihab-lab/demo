@@ -10,7 +10,7 @@ jobs:
   terraform-cloud:
     runs-on: ubuntu-latest
     env:
-      TF_CLOUD_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
     - name: Checkout code
