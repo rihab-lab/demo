@@ -1,0 +1,30 @@
+name: Terraform Infra Push (TF Cloud)
+
+on:
+  push:
+    paths:
+      - 'terraform/**'
+  workflow_dispatch:
+
+jobs:
+  terraform-cloud:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
+
+    - name: Terraform Init & Format Check
+      run: |
+        terraform fmt -check
+        terraform init
+      working-directory: terraform/
+
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: terraform/
