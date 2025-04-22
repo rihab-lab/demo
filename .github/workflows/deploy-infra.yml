@@ -2,21 +2,19 @@ name: CI
 
 on:
   push:
-    # déclenche lorsque tu modifies tes migrations ou ton infra
     paths:
       - 'schemachange/**'
       - 'terraform/**'
   workflow_dispatch:
 
 env:
-  # tes secrets Snowflake (ou cible équivalente)
   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
   SF_USER:    ${{ secrets.SF_USER }}
   SF_PWD:     ${{ secrets.SF_PWD }}
 
 jobs:
   schemachange:
-    name: ▶️ Deploy schemachange migrations
+    name: ▶️ Deploy Schemachange Migrations
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +26,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install schemachange
+      - name: Install Schemachange
         run: pip install schemachange
 
       - name: Deploy all migrations
@@ -36,7 +34,7 @@ jobs:
         run: schemachange deploy --config-file-name schema-change-config.yml
 
   terraform-cloud:
-    name: Deploy Terraform
+    name: 🚀 Deploy Terraform
     needs: schemachange
     runs-on: ubuntu-latest
 
@@ -52,7 +50,7 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init & Format & Validate
+      - name: Terraform Init & Validate
         run: |
           terraform fmt -check
           terraform init

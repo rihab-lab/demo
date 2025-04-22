@@ -17,7 +17,9 @@ change-folders:
   - streams
   - tables/raw
   - tables/bronze
-  
+  - tables/silver
+  - task
+
 # Options d'exécution
 autocommit: false
 verbose: true
