@@ -29,11 +29,22 @@ jobs:
       - name: Install Schemachange
         run: pip install schemachange
 
-      - name: Debug SF_ variables
+      - name: Print PWD length
+        run: echo "PWD length = ${#SF_PWD}"
+
+      - name: Generate connection.toml dynamically
+        working-directory: schemachange
         run: |
-          echo "SF_ACCOUNT = $SF_ACCOUNT"
-          echo "SF_USER = $SF_USER"
-          echo "SF_PWD = [HIDDEN]"
+          cat <<EOF > connection.toml
+          [connections.TEST]
+          account = "$SF_ACCOUNT"
+          user = "$SF_USER"
+          password = "$SF_PWD"
+          role = "ACCOUNTADMIN"
+          warehouse = "TEST_WH"
+          database = "TEST_POC_VISEO_DB"
+          schema = "RAW_LAYER"
+          EOF
 
       - name: Secure connection file
         working-directory: schemachange

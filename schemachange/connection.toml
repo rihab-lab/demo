@@ -1,7 +1,7 @@
 [TEST]
-account     = "kduztac-qe77136"
-user        = "$SF_USER"
-password    = "$SF_PWD"
+account = "$SF_ACCOUNT"
+user = "$SF_USER"
+password = "$SF_PWD"
 database = "TEST_POC_VISEO_DB"
 schema = "RAW_LAYER"
 warehouse = "TEST_WH"
