@@ -1,4 +1,4 @@
-[TEST]
+[connections.TEST]
 account     = "$SF_ACCOUNT"
 user        = "$SF_USER"
 password    = "$SF_PWD"
