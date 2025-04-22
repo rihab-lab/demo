@@ -1,9 +1,9 @@
 resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
-  name     = "PIPE_RAW_PRC_BENCHMARK"
-  provider = snowflake.account_admin
-  database = "TEST_POC_VISEO_DB"
-  schema   = "RAW_LAYER"
-  auto_ingest  = false
+  name        = "PIPE_RAW_PRC_BENCHMARK"
+  provider    = snowflake.account_admin
+  database    = "TEST_POC_VISEO_DB"
+  schema      = "RAW_LAYER"
+  auto_ingest = false
 
   copy_statement = <<-SQL
   COPY INTO TEST_POC_VISEO_DB.RAW_LAYER.PRC_BENCHMARK_RAW (
@@ -38,11 +38,11 @@ PATTERN = '.*PRC_BENCHMARK_[0-9]{8}\\.csv';
 
 
 resource "snowflake_pipe" "pipe_raw_prc_campaign" {
-  name     = "PIPE_RAW_PRC_CAMPAIGN"
-  provider = snowflake.account_admin
-  database = "TEST_POC_VISEO_DB"
-  schema   = "RAW_LAYER"
-  auto_ingest  = false
+  name        = "PIPE_RAW_PRC_CAMPAIGN"
+  provider    = snowflake.account_admin
+  database    = "TEST_POC_VISEO_DB"
+  schema      = "RAW_LAYER"
+  auto_ingest = false
 
   copy_statement = <<-SQL
   COPY INTO TEST_POC_VISEO_DB.RAW_LAYER.PRC_CAMPAIGN_RAW(
