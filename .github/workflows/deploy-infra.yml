@@ -1,32 +1,79 @@
-name: Terraform Infra Push (TF Cloud)
+name: CI
 
 on:
   push:
+    # on déclenche quand tu changes tes migrations ou ton infra
     paths:
+      - 'schemachange/**'
       - 'terraform/**'
   workflow_dispatch:
 
+env:
+  # tes secrets Snowflake (ou BigQuery, Postgres…)
+  SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+  SNOWFLAKE_USER:    ${{ secrets.SF_USER }}
+  SNOWFLAKE_PWD:     ${{ secrets.SF_PWD }}
+
 jobs:
-  terraform-cloud:
+  schemachange:
+    name: ▶️ Run schemachange migrations
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install schemachange
+        run: pip install schemachange
+
+      - name: Apply raw→bronze migrations
+        working-directory: schemachange
+        run: |
+          # Applique d’abord les objets (procédures, streams…)
+          schemachange \
+            --config-file config.yaml \
+            --change-folder objects_statements/procedures
+          schemachange \
+            --config-file config.yaml \
+            --change-folder streams
+
+          # Puis tes tables raw → bronze
+          # Ici on pointe vers le dossier raw pour créer la table,
+          # et ensuite vers le dossier bronze pour l’altérer si besoin.
+          schemachange \
+            --config-file config.yaml \
+            --change-folder tables/raw
+          schemachange \
+            --config-file config.yaml \
+            --change-folder tables/bronze
+
+  terraform-cloud:
+    name: 🚀 Deploy Terraform
+    needs: schemachange
+    runs-on: ubuntu-latest
+
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.0
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
 
-    - name: Terraform Init & Format Check
-      run: |
-        terraform fmt -check
-        terraform init
-      working-directory: terraform/
+      - name: Terraform Init & Format Check
+        run: |
+          terraform fmt -check
+          terraform init
+        working-directory: terraform/
 
-    - name: Terraform Validate
-      run: terraform validate
-      working-directory: terraform/
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: terraform/
