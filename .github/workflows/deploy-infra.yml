@@ -3,8 +3,8 @@ name: CI
 on:
   push:
     paths:
-      - 'schemachange/**'
       - 'terraform/**'
+      - 'schemachange/**'
   workflow_dispatch:
 
 env:
@@ -14,29 +14,29 @@ env:
 
 jobs:
   terraform-core:
-    name: 🏗️ Deploy Core Terraform
+    name: 🏗️ Terraform Core (DB, schemas, roles, etc.)
     runs-on: ubuntu-latest
 
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.4.0
 
-      - name: Terraform Init & Apply (core)
+      - name: Terraform Init & Apply Core
         run: |
           terraform init
           terraform apply -auto-approve
         working-directory: terraform/core/
 
   schemachange:
-    name: ▶️ Deploy Schemachange Migrations
+    name: ▶️ Schemachange Migrations
     needs: terraform-core
     runs-on: ubuntu-latest
 
@@ -49,7 +49,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Schemachange + envsubst
+      - name: Install schemachange + envsubst
         run: |
           pip install schemachange
           sudo apt-get update && sudo apt-get install -y gettext
@@ -62,12 +62,12 @@ jobs:
         working-directory: schemachange
         run: chmod 600 connection.toml
 
-      - name: Deploy migrations
+      - name: Run schemachange migrations
         working-directory: schemachange
         run: schemachange deploy --config-file-name schema-change-config.yml
 
   terraform-pipe:
-    name: 🚀 Deploy Terraform Pipe
+    name: 🚀 Terraform Pipes (Snowpipe ingestion)
     needs: schemachange
     runs-on: ubuntu-latest
 
@@ -75,15 +75,15 @@ jobs:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.4.0
 
-      - name: Terraform Init & Apply (pipe only)
+      - name: Terraform Init & Apply Pipe
         run: |
           terraform init
           terraform apply -auto-approve
