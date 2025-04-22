@@ -11,63 +11,80 @@ env:
   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
   SF_USER:    ${{ secrets.SF_USER }}
   SF_PWD:     ${{ secrets.SF_PWD }}
-  TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
 jobs:
-  terraform-init:
-    name: 🚀 Init Terraform (DB, Schemas, Stages)
+  terraform-core:
+    name: 🏗️ Deploy Core Terraform
     runs-on: ubuntu-latest
 
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init + Apply (infra only)
-        working-directory: terraform/infra
+      - name: Terraform Init & Apply (core)
         run: |
           terraform init
           terraform apply -auto-approve
+        working-directory: terraform/core/
 
-  schemachange-all:
-    name: 🔄 All Migrations (RAW + Bronze, Silver, Tasks...)
+  schemachange:
+    name: ▶️ Deploy Schemachange Migrations
+    needs: terraform-core
     runs-on: ubuntu-latest
-    needs: terraform-init
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup Python + envsubst
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Schemachange + envsubst
         run: |
           pip install schemachange
           sudo apt-get update && sudo apt-get install -y gettext
 
-      - name: Generate connection.toml from template
+      - name: Generate connection.toml
         working-directory: schemachange
         run: envsubst < connection.template.toml > connection.toml
 
-      - name: Deploy all migrations
+      - name: Secure connection file
+        working-directory: schemachange
+        run: chmod 600 connection.toml
+
+      - name: Deploy migrations
         working-directory: schemachange
         run: schemachange deploy --config-file-name schema-change-config.yml
 
-  terraform-pipes:
-    name: 🚧 Terraform Pipes (after RAW)
+  terraform-pipe:
+    name: 🚀 Deploy Terraform Pipe
+    needs: schemachange
     runs-on: ubuntu-latest
-    needs: schemachange-all
+
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init + Apply (pipes only)
-        working-directory: terraform/pipes
+      - name: Terraform Init & Apply (pipe only)
         run: |
           terraform init
           terraform apply -auto-approve
+        working-directory: terraform/pipe/
