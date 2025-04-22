@@ -11,14 +11,6 @@ connection-name: 'TEST'
 change-history-table: 'TEST_POC_VISEO_DB.MONITORING_LAYER.SCHEMA_CHANGE_HISTORY'
 create-change-history-table: true
 
-# Liste de tous tes dossiers de migrations, dans l'ordre voulu
-folders:
-  - objects_statements/procedures
-  - streams
-  - tables/raw
-  - tables/bronze
-  - tables/silver
-  - task
 
 # Options d'exécution
 autocommit: false
