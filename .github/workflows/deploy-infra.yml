@@ -26,25 +26,14 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Schemachange
-        run: pip install schemachange
-
-      - name: Print PWD length
-        run: echo "PWD length = ${#SF_PWD}"
-
-      - name: Generate connection.toml dynamically
-        working-directory: schemachange
+      - name: Install Schemachange + envsubst
         run: |
-          cat <<EOF > connection.toml
-          [TEST]
-          account = "$SF_ACCOUNT"
-          user = "$SF_USER"
-          password = "$SF_PWD"
-          role = "ACCOUNTADMIN"
-          warehouse = "TEST_WH"
-          database = "TEST_POC_VISEO_DB"
-          schema = "RAW_LAYER"
-          EOF
+          pip install schemachange
+          sudo apt-get update && sudo apt-get install -y gettext  # pour envsubst
+
+      - name: Generate connection.toml from template
+        working-directory: schemachange
+        run: envsubst < connection.template.toml > connection.toml
 
       - name: Secure connection file
         working-directory: schemachange
