@@ -2,12 +2,14 @@ name: CI
 
 on:
   push:
+    # déclenche lorsque tu modifies tes migrations ou ton infra
     paths:
       - 'schemachange/**'
       - 'terraform/**'
   workflow_dispatch:
 
 env:
+  # tes secrets Snowflake (ou cible équivalente)
   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
   SF_USER:    ${{ secrets.SF_USER }}
   SF_PWD:     ${{ secrets.SF_PWD }}
@@ -28,6 +30,11 @@ jobs:
 
       - name: Install Schemachange
         run: pip install schemachange
+
+      - name: Secure connection file
+        # Empêche les permissions trop ouvertes sur connection.toml
+        working-directory: schemachange
+        run: chmod 600 connection.toml
 
       - name: Deploy all migrations
         working-directory: schemachange
