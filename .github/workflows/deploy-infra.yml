@@ -36,7 +36,7 @@ jobs:
         working-directory: schemachange
         run: |
           cat <<EOF > connection.toml
-          [connections.TEST]
+          [TEST]
           account = "$SF_ACCOUNT"
           user = "$SF_USER"
           password = "$SF_PWD"
