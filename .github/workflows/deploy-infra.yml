@@ -1,27 +1,24 @@
-name: CI
+name: CI - Snowflake Terraform & Schemachange
 
 on:
   push:
     paths:
-      - 'schemachange/**'
       - 'terraform/**'
+      - 'schemachange/**'
   workflow_dispatch:
 
 env:
+  TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
   SF_USER:    ${{ secrets.SF_USER }}
   SF_PWD:     ${{ secrets.SF_PWD }}
 
 jobs:
-  terraform-cloud:
-    name: 🚀 Deploy Terraform
+  terraform-core:
+    name: 🚀 Terraform (core infra only)
     runs-on: ubuntu-latest
-
-    env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Terraform
@@ -29,20 +26,18 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init & Validate
+      - name: Terraform Init & Apply (without pipes)
         run: |
-          terraform fmt -check
           terraform init
-          terraform validate
-        working-directory: terraform/
+          terraform apply -auto-approve -var="enable_pipes=false"
+        working-directory: terraform
 
   schemachange:
-    name: ▶️ Deploy Schemachange Migrations
-    needs: terraform-cloud
+    name: 🧱 Schemachange
+    needs: terraform-core
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -50,12 +45,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Schemachange + envsubst
+      - name: Install schemachange
         run: |
           pip install schemachange
           sudo apt-get update && sudo apt-get install -y gettext
 
-      - name: Generate connection.toml from template
+      - name: Generate connection.toml
         working-directory: schemachange
         run: envsubst < connection.template.toml > connection.toml
 
@@ -63,6 +58,25 @@ jobs:
         working-directory: schemachange
         run: chmod 600 connection.toml
 
-      - name: Deploy all migrations
+      - name: Deploy Snowflake migrations
         working-directory: schemachange
         run: schemachange deploy --config-file-name schema-change-config.yml
+
+  terraform-pipes:
+    name: 📦 Terraform (pipes only)
+    needs: schemachange
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init & Apply (with pipes)
+        run: |
+          terraform init
+          terraform apply -auto-approve -var="enable_pipes=true"
+        working-directory: terraform

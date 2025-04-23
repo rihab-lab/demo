@@ -7,3 +7,8 @@ variable "azure_container_url" {
   description = "URL du conteneur Azure Blob (ex: azure://...)"
   type        = string
 }
+
+variable "enable_pipes" {
+  type    = bool
+  default = false
+}
