@@ -13,39 +13,8 @@ env:
   SF_PWD:     ${{ secrets.SF_PWD }}
 
 jobs:
-  schemachange:
-    name: ▶️ Deploy Schemachange Migrations
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install Schemachange + envsubst
-        run: |
-          pip install schemachange
-          sudo apt-get update && sudo apt-get install -y gettext  # pour envsubst
-
-      - name: Generate connection.toml from template
-        working-directory: schemachange
-        run: envsubst < connection.template.toml > connection.toml
-
-      - name: Secure connection file
-        working-directory: schemachange
-        run: chmod 600 connection.toml
-
-      - name: Deploy all migrations
-        working-directory: schemachange
-        run: schemachange deploy --config-file-name schema-change-config.yml
-
   terraform-cloud:
     name: 🚀 Deploy Terraform
-    needs: schemachange
     runs-on: ubuntu-latest
 
     env:
@@ -66,3 +35,34 @@ jobs:
           terraform init
           terraform validate
         working-directory: terraform/
+
+  schemachange:
+    name: ▶️ Deploy Schemachange Migrations
+    needs: terraform-cloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Schemachange + envsubst
+        run: |
+          pip install schemachange
+          sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Generate connection.toml from template
+        working-directory: schemachange
+        run: envsubst < connection.template.toml > connection.toml
+
+      - name: Secure connection file
+        working-directory: schemachange
+        run: chmod 600 connection.toml
+
+      - name: Deploy all migrations
+        working-directory: schemachange
+        run: schemachange deploy --config-file-name schema-change-config.yml
