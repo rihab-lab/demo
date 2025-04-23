@@ -3,42 +3,18 @@ name: CI
 on:
   push:
     paths:
-      - 'terraform/**'
       - 'schemachange/**'
+      - 'terraform/**'
   workflow_dispatch:
 
 env:
-  # Snowflake credentials
   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
   SF_USER:    ${{ secrets.SF_USER }}
   SF_PWD:     ${{ secrets.SF_PWD }}
 
-  # Terraform Cloud token
-  TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-
 jobs:
-  terraform-core:
-    name: 🏗️ Terraform Core (DB, tables, stages)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Terraform Init & Apply Core
-        run: |
-          terraform init
-          terraform apply -auto-approve
-        working-directory: terraform/core/
-
   schemachange:
-    name: ▶️ Schemachange SQL Migrations
-    needs: terraform-core
+    name: ▶️ Deploy Schemachange Migrations
     runs-on: ubuntu-latest
 
     steps:
@@ -50,12 +26,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install schemachange + envsubst
+      - name: Install Schemachange + envsubst
         run: |
           pip install schemachange
-          sudo apt-get update && sudo apt-get install -y gettext
+          sudo apt-get update && sudo apt-get install -y gettext  # pour envsubst
 
-      - name: Generate connection.toml
+      - name: Generate connection.toml from template
         working-directory: schemachange
         run: envsubst < connection.template.toml > connection.toml
 
@@ -63,17 +39,20 @@ jobs:
         working-directory: schemachange
         run: chmod 600 connection.toml
 
-      - name: Deploy Schemachange Migrations
+      - name: Deploy all migrations
         working-directory: schemachange
         run: schemachange deploy --config-file-name schema-change-config.yml
 
-  terraform-pipe:
-    name: 🚀 Terraform Snowpipes
+  terraform-cloud:
+    name: 🚀 Deploy Terraform
     needs: schemachange
     runs-on: ubuntu-latest
 
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Terraform
@@ -81,8 +60,9 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init & Apply Pipes
+      - name: Terraform Init & Validate
         run: |
+          terraform fmt -check
           terraform init
-          terraform apply -auto-approve
-        working-directory: terraform/pipe/
+          terraform validate
+        working-directory: terraform/
