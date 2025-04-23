@@ -1,5 +1,4 @@
 resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
-  count       = var.enable_pipes ? 1 : 0
   name        = "PIPE_RAW_PRC_BENCHMARK"
   provider    = snowflake.account_admin
   database    = "TEST_POC_VISEO_DB"
@@ -39,7 +38,6 @@ PATTERN = '.*PRC_BENCHMARK_[0-9]{8}\\.csv';
 
 
 resource "snowflake_pipe" "pipe_raw_prc_campaign" {
-  count       = var.enable_pipes ? 1 : 0
   name        = "PIPE_RAW_PRC_CAMPAIGN"
   provider    = snowflake.account_admin
   database    = "TEST_POC_VISEO_DB"
