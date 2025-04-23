@@ -60,5 +60,5 @@ resource "snowflake_table" "change_history_table" {
     type = "TIMESTAMP_LTZ"
   }
 
-}*
+}
 
