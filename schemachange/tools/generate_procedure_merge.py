@@ -16,7 +16,7 @@ configs = [
     }
 ]
 
-# Modèle de procédure
+# Modèle de procédure générer 
 HEADER = """CREATE OR REPLACE PROCEDURE {proc_name}()
 RETURNS STRING
 LANGUAGE SQL
