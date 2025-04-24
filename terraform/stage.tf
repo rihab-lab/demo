@@ -30,4 +30,7 @@ resource "snowflake_stage" "azure_stage" {
   storage_integration = "AZURE_STORAGE_INT"
 
   file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
+  depends_on = [
+    snowflake_file_format.csv_format
+  ]
 }
