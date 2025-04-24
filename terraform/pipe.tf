@@ -1,8 +1,8 @@
 /*resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
   name        = "PIPE_RAW_PRC_BENCHMARK"
   provider    = snowflake.account_admin
-  database    = "TEST_POC_VISEO_DB"
-  schema      = "RAW_LAYER"
+  database    = snowflake_database.db.name
+  schema      = snowflake_schema.raw_layer.name
   auto_ingest = false
 
   copy_statement = <<-SQL
@@ -40,8 +40,8 @@ PATTERN = '.*PRC_BENCHMARK_[0-9]{8}\\.csv';
 resource "snowflake_pipe" "pipe_raw_prc_campaign" {
   name        = "PIPE_RAW_PRC_CAMPAIGN"
   provider    = snowflake.account_admin
-  database    = "TEST_POC_VISEO_DB"
-  schema      = "RAW_LAYER"
+  database    = snowflake_database.db.name
+  schema      = snowflake_schema.raw_layer.name
   auto_ingest = false
 
   copy_statement = <<-SQL
