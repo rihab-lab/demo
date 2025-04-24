@@ -5,9 +5,7 @@ from packaging.version import Version
 # Configuration des dossiers et noms de procédure
 configs = [
     {
-        "merge_dir": "schemmachange/scripts/silver
-        
-        ",
+        "merge_dir": "schemmachange/scripts/silver",
         "proc_name": "process_bronze_to_silver",
         "out_dir": "objects_statements/procedures"
     },
