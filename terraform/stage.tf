@@ -21,6 +21,6 @@ resource "snowflake_stage" "azure_stage" {
   file_format = <<-EOT
     TYPE = CSV
     SKIP_HEADER = 1
-    FIELD_OPTIONALLY_ENCLOSED_BY = "\""
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
   EOT
 }
