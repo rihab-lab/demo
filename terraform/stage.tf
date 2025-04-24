@@ -1,4 +1,4 @@
-resource "snowflake_storage_integration" "azure_int" {
+/*resource "snowflake_storage_integration" "azure_int" {
   provider              = snowflake.account_admin
   name                   = "AZURE_STORAGE_INT"
   type                   = "EXTERNAL_STAGE"
@@ -23,4 +23,4 @@ resource "snowflake_stage" "azure_stage" {
     SKIP_HEADER = 1
     FIELD_OPTIONALLY_ENCLOSED_BY = '"'
   EOT
-}
+}*/
