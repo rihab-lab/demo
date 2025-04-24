@@ -23,15 +23,11 @@ resource "snowflake_file_format" "csv_format" {
 
 resource "snowflake_stage" "azure_stage" {
   provider            = snowflake.account_admin
-  name                = "EXTERNAL_AZURE_STAGE_BLOB"
+  name                = "EXTERNAL_AZURE_STAGE"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
   url                 =  var.azure_container_url
   storage_integration = "AZURE_STORAGE_INT"
 
-  file_format = "FORMAT_NAME = 'TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT'"
-   depends_on = [
-    snowflake_file_format.csv_format
-  ]
-
+  file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
 }
