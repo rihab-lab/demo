@@ -9,22 +9,21 @@ resource "snowflake_storage_integration" "azure_int" {
   ]
   enabled = true
 }
+
 resource "snowflake_file_format" "csv_format" {
-  provider   = snowflake.account_admin
-  name       = "CSV_FORMAT"
-  database   = "TEST_POC_VISEO_DB"
-  schema     = "RAW_LAYER"
+  provider              = snowflake.account_admin
+  name        = "CSV_FORMAT"
+  database    = "TEST_POC_VISEO_DB"
+  schema      = "RAW_LAYER"
   format_type = "CSV"
 
-  skip_header         = 1
-  field_delimiter     = ";"      
-  null_if             = ["NULL", "null"]
-  empty_field_as_null = true
+  skip_header                   = 1
+  field_optionally_enclosed_by = "\""
 }
 
 resource "snowflake_stage" "azure_stage" {
   provider            = snowflake.account_admin
-  name                = "AZURE_BLOB_EXTERNAL_STAGE"
+  name                = "EXTERNAL_AZURE_STAGE_BLOB"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
   url                 =  var.azure_container_url
