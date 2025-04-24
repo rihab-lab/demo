@@ -63,6 +63,10 @@ jobs:
         working-directory: schemachange
         run: chmod 600 connection.toml
 
+      - name: Generate Bronze→Silver & Silver→Gold procedure
+        working-directory: schemachange
+        run: python tools/generate_procedure_merge.py
+
       - name: Deploy all migrations
         working-directory: schemachange
         run: schemachange deploy --config-file-name schema-change-config.yml

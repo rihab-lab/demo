@@ -1,4 +1,4 @@
-/*resource "snowflake_storage_integration" "azure_int" {
+resource "snowflake_storage_integration" "azure_int" {
   provider              = snowflake.account_admin
   name                   = "AZURE_STORAGE_INT"
   type                   = "EXTERNAL_STAGE"
@@ -17,14 +17,14 @@ resource "snowflake_file_format" "csv_format" {
   format_type = "CSV"
 
   skip_header         = 1
-  field_delimiter     = ";"      # ✅ Ton fichier est délimité par des points-virgules
+  field_delimiter     = ";"      
   null_if             = ["NULL", "null"]
   empty_field_as_null = true
 }
 
 resource "snowflake_stage" "azure_stage" {
   provider            = snowflake.account_admin
-  name                = "EXTERNAL_AZURE_STAGE"
+  name                = "AZURE_BLOB_EXTERNAL_STAGE"
   database            = "TEST_POC_VISEO_DB"
   schema              = "RAW_LAYER"
   url                 =  var.azure_container_url
@@ -32,4 +32,3 @@ resource "snowflake_stage" "azure_stage" {
 
   file_format = "FORMAT_NAME = TEST_POC_VISEO_DB.RAW_LAYER.CSV_FORMAT"
 }
-*/
