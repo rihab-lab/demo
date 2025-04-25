@@ -5,12 +5,12 @@ from packaging.version import Version
 # Configuration des dossiers et noms de procédure
 configs = [
     {
-        "merge_dir": "schemachange/objects_statements/scripts/silver",
+        "merge_dir": "objects_statements/scripts/silver",
         "proc_name": "process_bronze_to_silver",
         "out_dir": "schemachange/objects_statements/procedures"
     },
     {
-        "merge_dir": "schemachange/objects_statements/scripts/gold",
+        "merge_dir": "objects_statements/scripts/gold",
         "proc_name": "process_silver_to_gold",
         "out_dir": "schemachange/objects_statements/procedures"
     }
