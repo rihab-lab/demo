@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import re
 from packaging.version import Version
@@ -5,18 +6,18 @@ from packaging.version import Version
 # Configuration des dossiers et noms de procédure
 configs = [
     {
-        "merge_dir": "schemmachange/scripts/silver",
+        "merge_dir": "schemachange/objects_statements/scripts/silver",
         "proc_name": "process_bronze_to_silver",
-        "out_dir": "objects_statements/procedures"
+        "out_dir": "schemachange/objects_statements/procedures"
     },
     {
-        "merge_dir": "schemmachange/scripts/gold",
+        "merge_dir": "schemachange/objects_statements/scripts/gold",
         "proc_name": "process_silver_to_gold",
-        "out_dir": "objects_statements/procedures"
+        "out_dir": "schemachange/objects_statements/procedures"
     }
 ]
 
-# Modèle de procédure générer 
+# Modèle de procédure
 HEADER = """CREATE OR REPLACE PROCEDURE {proc_name}()
 RETURNS STRING
 LANGUAGE SQL

@@ -65,7 +65,7 @@ jobs:
 
       - name: Generate Bronze→Silver & Silver→Gold procedure
         working-directory: schemachange
-        run: python tools/generate_procedure_merge.py
+        run: python schemachange/tools/generate_procedure_merge.py
 
       - name: Deploy all migrations
         working-directory: schemachange
