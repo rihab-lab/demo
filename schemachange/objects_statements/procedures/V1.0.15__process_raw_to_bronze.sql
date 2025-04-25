@@ -14,13 +14,18 @@ def main(session: Session) -> str:
     streams = session.sql("SHOW STREAMS IN SCHEMA RAW_LAYER").collect()
 
     for s in streams:
-        name = s['name']  # e.g. "PRC_BENCHMARK_STREAM"
+        name = s['name']  # ex. "PRC_BENCHMARK_RAW_STREAM"
         if not name.endswith('_STREAM'):
             continue
 
-        prefix       = name[:-7]                    # "PRC_BENCHMARK"
-        raw_table    = f"RAW_LAYER.{prefix}_RAW"
-        bronze_table = f"BRONZE_LAYER.{prefix}_BRZ"
+        # on retire "_STREAM"
+        prefix_with_raw = name[:-7]           # ex. "PRC_BENCHMARK_RAW"
+        # la table RAW existe sans double "_RAW"
+        raw_table    = f"RAW_LAYER.{prefix_with_raw}"
+        # pour la couche Bronze, on enlève le suffixe "_RAW" puis on ajoute "_BRZ"
+        bronze_base  = prefix_with_raw[:-4]   # ex. "PRC_BENCHMARK"
+        bronze_table = f"BRONZE_LAYER.{bronze_base}_BRZ"
+
         monitor_tbl  = "TEST_POC_VISEO_DB.MONITORING_LAYER.TRACKERS"
         stream_table = f"RAW_LAYER.{name}"
 
@@ -32,7 +37,7 @@ def main(session: Session) -> str:
         )
         for row in df.collect():
             file_name = row[0]
-            load_time = row[1].isoformat()  # ISO format
+            load_time = row[1].isoformat()
 
             # 3) Charger en Bronze
             session.sql(f"""
@@ -51,7 +56,7 @@ def main(session: Session) -> str:
                 INSERT INTO {monitor_tbl}
                   (source_flux, file_name, load_time, processed_at, status, error_message)
                 VALUES (
-                  '{prefix}',
+                  '{bronze_base}',
                   '{file_name}',
                   TO_TIMESTAMP_LTZ('{load_time}'),
                   CURRENT_TIMESTAMP(),
