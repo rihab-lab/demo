@@ -6,12 +6,12 @@ from packaging.version import Version
 configs = [
     {
         "merge_dir": "schemachange/objects_statements/scripts/silver",
-        "proc_name": "process_bronze_to_silver",
+        "proc_name": "SILVER_LAYER.process_bronze_to_silver",
         "out_dir":  "schemachange/objects_statements/procedures"
     },
     {
         "merge_dir": "schemachange/objects_statements/scripts/gold",
-        "proc_name": "process_silver_to_gold",
+        "proc_name": "GOLD_LAYER.process_silver_to_gold",
         "out_dir":  "schemachange/objects_statements/procedures"
     }
 ]
