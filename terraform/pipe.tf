@@ -1,4 +1,4 @@
-/*resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
+resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
   name        = "PIPE_RAW_PRC_BENCHMARK"
   provider    = snowflake.account_admin
   database    = snowflake_database.db.name
@@ -80,5 +80,3 @@ FILE_FORMAT = (
 PATTERN = '.*PRC_CAMPAIGN_[0-9]{8}\\.csv';
   SQL
 }
-*/
-
