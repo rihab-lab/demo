@@ -1,4 +1,4 @@
-/*resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
+resource "snowflake_pipe" "pipe_raw_prc_benchmark" {
   name        = "PIPE_RAW_PRC_BENCHMARK"
   provider    = snowflake.account_admin
   database    = snowflake_database.db.name
@@ -24,7 +24,7 @@ FROM (
     $5,
     METADATA$FILENAME,         -- FILE_NAME
     CURRENT_TIMESTAMP()        -- LOAD_TIME
-  FROM @TEST_POC_VISEO_DB.RAW_LAYER.EXTERNAL_AZUR_STAGE
+  FROM @TEST_POC_VISEO_DB.RAW_LAYER.EXTERNAL_AZURE_STAGE
 )
 FILE_FORMAT = (
   TYPE = 'CSV'
@@ -69,7 +69,7 @@ FROM (
     $8,
     METADATA$FILENAME,         -- FILE_NAME
     CURRENT_TIMESTAMP()        -- LOAD_TIME
-  FROM @TEST_POC_VISEO_DB.RAW_LAYER.EXTERNAL_AZUR_STAGE
+  FROM @TEST_POC_VISEO_DB.RAW_LAYER.EXTERNAL_AZURE_STAGE
 )
 FILE_FORMAT = (
   TYPE = 'CSV'
@@ -79,6 +79,6 @@ FILE_FORMAT = (
 )
 PATTERN = '.*PRC_CAMPAIGN_[0-9]{8}\\.csv';
   SQL
-}*/
+}
 
 
