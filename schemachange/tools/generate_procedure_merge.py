@@ -47,7 +47,7 @@ def bump_version_global(out_dir):
         latest = max(versions)
         new = Version(f"{latest.major}.{latest.minor}.{latest.micro+1}")
     else:
-        new = Version("1.0.0")
+        new = Version("1.1.0")
 
     return f"V{new.public}"
 
