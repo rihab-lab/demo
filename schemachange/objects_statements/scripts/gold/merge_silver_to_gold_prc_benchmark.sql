@@ -1,16 +1,22 @@
 MERGE INTO GOLD_LAYER.DIM_PRC_BENCHMARK_GLD AS tgt
 USING (
-  SELECT
-    PRICINGBENCHMARKPRCINTKEY         AS PrcPcsBenchmarkIntKey,
-    -- Valeur par défaut pour la colonne non présente en SILVER
-    0                                  AS PrcPcsGenericProductIntKey,
-    APUKCODE,
-    CURRENT_TIMESTAMP()               AS SYS_DATE_CREATE,
-    CURRENT_TIMESTAMP()               AS SYS_DATE_UPDATE
-  --FROM SILVER_LAYER.DIM_PRC_BENCHMARK_SLV
-  FROM SILVER_LAYER.DIM_PRC_BENCHMARK_SLV_STREAM
-  WHERE PRICINGBENCHMARKPRCINTKEY IS NOT NULL
-    AND APUKCODE                   IS NOT NULL
+  SELECT *
+  FROM (
+    SELECT
+      PRICINGBENCHMARKPRCINTKEY         AS PrcPcsBenchmarkIntKey,
+      0                                 AS PrcPcsGenericProductIntKey,
+      APUKCODE,
+      CURRENT_TIMESTAMP()               AS SYS_DATE_CREATE,
+      CURRENT_TIMESTAMP()               AS SYS_DATE_UPDATE,
+      ROW_NUMBER() OVER (
+        PARTITION BY PRICINGBENCHMARKPRCINTKEY
+        ORDER BY SYS_DATE_UPDATE DESC
+      ) AS row_num
+    FROM SILVER_LAYER.DIM_PRC_BENCHMARK_SLV_STREAM
+    WHERE PRICINGBENCHMARKPRCINTKEY IS NOT NULL
+      AND APUKCODE IS NOT NULL
+  )
+  WHERE row_num = 1
 ) src
 ON tgt.PrcPcsBenchmarkIntKey = src.PrcPcsBenchmarkIntKey
 

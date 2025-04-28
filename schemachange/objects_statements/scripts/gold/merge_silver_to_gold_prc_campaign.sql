@@ -1,16 +1,23 @@
 MERGE INTO GOLD_LAYER.DIM_PRC_CAMPAIGN_GLD AS tgt
 USING (
-  SELECT
-    PricingCampaignPrcIntKey    AS PrcPcsCampaignIntKey,
-    HouseKey,
-    CampaignCode,
-    CURRENT_TIMESTAMP()         AS SYS_DATE_CREATE,
-    CURRENT_TIMESTAMP()         AS SYS_DATE_UPDATE
-  --FROM SILVER_LAYER.DIM_PRC_CAMPAIGN_SLV
-  FROM SILVER_LAYER.DIM_PRC_CAMPAIGN_SLV_STREAM
-  WHERE PricingCampaignPrcIntKey IS NOT NULL
-    AND HouseKey                  IS NOT NULL
-    AND CampaignCode              IS NOT NULL
+  SELECT *
+  FROM (
+    SELECT
+      PricingCampaignPrcIntKey    AS PrcPcsCampaignIntKey,
+      HouseKey,
+      CampaignCode,
+      CURRENT_TIMESTAMP()         AS SYS_DATE_CREATE,
+      CURRENT_TIMESTAMP()         AS SYS_DATE_UPDATE,
+      ROW_NUMBER() OVER (
+        PARTITION BY PricingCampaignPrcIntKey
+        ORDER BY SYS_DATE_UPDATE DESC
+      ) AS row_num
+    FROM SILVER_LAYER.DIM_PRC_CAMPAIGN_SLV_STREAM
+    WHERE PricingCampaignPrcIntKey IS NOT NULL
+      AND HouseKey                  IS NOT NULL
+      AND CampaignCode              IS NOT NULL
+  )
+  WHERE row_num = 1
 ) src
 ON tgt.PrcPcsCampaignIntKey = src.PrcPcsCampaignIntKey
 
