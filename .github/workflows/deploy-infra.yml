@@ -29,15 +29,20 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init & Validate
-        run: |
-          terraform fmt -check
-          terraform init
-          terraform validate
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: terraform/
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform/
+
+      - name: Terraform Validate
+        run: terraform validate
         working-directory: terraform/
 
   schemachange:
-    name: Deploy Schemachange 
+    name: Deploy Schemachange
     needs: terraform-cloud
     runs-on: ubuntu-latest
 
@@ -50,29 +55,35 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Switch APT mirror to Ubuntu archive
-        run: |
-          sudo sed -i \
-            's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
-            /etc/apt/sources.list
+      - name: Install Schemachange
+        run: pip install schemachange
 
-      - name: Install Schemachange + envsubst
-        run: |
-          pip install schemachange
-          sudo apt-get update
-          sudo apt-get install -y gettext
-
-      - name: Generate connection.toml from template
+      - name: Generate connection.toml from template (Python way)
         working-directory: schemachange
-        run: envsubst < connection.template.toml > connection.toml
+        run: |
+          python3 -c "
+import os
+with open('connection.template.toml', 'r') as file:
+    content = file.read()
+for key in os.environ:
+    content = content.replace('${' + key + '}', os.getenv(key, ''))
+with open('connection.toml', 'w') as file:
+    file.write(content)
+"
 
-      - name: Secure connection file
+      - name: Secure connection.toml
         working-directory: schemachange
         run: chmod 600 connection.toml
 
       - name: Generate Bronze→Silver & Silver→Gold procedures
-        run: python schemachange/tools/generate_procedure_merge.py
+        working-directory: schemachange
+        run: python tools/generate_procedure_merge.py
 
       - name: Deploy all migrations
         working-directory: schemachange
-        run: schemachange deploy --config-file-name schema-change-config.yml
+        run: schemachange deploy --config-file-name schema-change-config.yml --create-change-history-table
+
+      - name: Clean connection.toml
+        working-directory: schemachange
+        if: always()
+        run: rm -f connection.toml
