@@ -50,10 +50,17 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Switch APT mirror to Ubuntu archive
+        run: |
+          sudo sed -i \
+            's|http://azure.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list
+
       - name: Install Schemachange + envsubst
         run: |
           pip install schemachange
-          sudo apt-get update && sudo apt-get install -y gettext
+          sudo apt-get update
+          sudo apt-get install -y gettext
 
       - name: Generate connection.toml from template
         working-directory: schemachange
