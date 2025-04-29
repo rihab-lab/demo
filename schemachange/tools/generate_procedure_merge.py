@@ -1,4 +1,5 @@
-"""import os
+"""
+import os
 import re
 from packaging.version import Version
 
@@ -16,25 +17,26 @@ configs = [
     }
 ]
 
+
 # Modèle de procédure
-HEADER = """CREATE OR REPLACE PROCEDURE {proc_name}()
+HEADER = CREATE OR REPLACE PROCEDURE {proc_name}()
 RETURNS STRING
 LANGUAGE SQL
 AS
 $$
 BEGIN
-"""
-FOOTER = """
+
+FOOTER = 
   RETURN '{proc_name} terminé';
 END;
 $$;
-"""
+"
 
 def bump_version_global(out_dir):
-    """
+    
     Parcourt tous les fichiers Vx.y.z__*.sql dans out_dir,
     retourne la nouvelle étiquette de version Vx.y.z (patch bump).
-    """
+    
     os.makedirs(out_dir, exist_ok=True)
 
     pattern = re.compile(r"V(\d+\.\d+\.\d+)__.*\.sql$")

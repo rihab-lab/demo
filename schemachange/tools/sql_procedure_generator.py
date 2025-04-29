@@ -65,7 +65,7 @@ def generate_procedure(layer):
                     merged_body += f"-- From: {sql}\n"
                     merged_body += f.read().rstrip() + "\n\n"
 
-        # Créer le fichier de procédure final avec la couche dynamique (SILVER_LAYER ou GOLD_LAYER)
+        #  (SILVER_LAYER ou GOLD_LAYER)
         HEADER = f"""CREATE OR REPLACE PROCEDURE {layer.upper()}_LAYER.{proc_name}()
 RETURNS STRING
 LANGUAGE SQL
@@ -88,7 +88,6 @@ $$;
 
 def main():
     """Lance la génération des procédures."""
-    # Utilisation de argparse pour accepter des paramètres en ligne de commande
     parser = argparse.ArgumentParser(description="Génère des procédures SQL pour différentes couches.")
     parser.add_argument('--layer', type=str, required=True, choices=['silver', 'gold'], help="Spécifie la couche (silver ou gold)")
 

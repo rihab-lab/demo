@@ -37,7 +37,7 @@ jobs:
         working-directory: terraform/
 
   schemachange:
-    name: Deploy Schemachange 
+    name: Deploy Schemachange
     needs: terraform-cloud
     runs-on: ubuntu-latest
 
@@ -62,9 +62,6 @@ jobs:
       - name: Secure connection file
         working-directory: schemachange
         run: chmod 600 connection.toml
-
-      - name: Generate Bronze→Silver & Silver→Gold procedures
-        run: python schemachange/tools/generate_procedure_merge.py
 
       - name: Deploy all migrations
         working-directory: schemachange
