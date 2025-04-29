@@ -1,4 +1,4 @@
-import os
+"""import os
 import re
 from packaging.version import Version
 
@@ -84,3 +84,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
