@@ -74,7 +74,7 @@ def generate_procedure(merge_dir, proc_name, out_dir):
         out.write(merged_body)
         out.write(FOOTER.format(proc_name=proc_name))
 
-    print(f"✅ Generated {output_file}")
+    print(f"Generated {output_file}")
 
 def main():
     for cfg in configs:
